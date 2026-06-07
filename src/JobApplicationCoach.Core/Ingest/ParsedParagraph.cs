@@ -8,7 +8,6 @@ public sealed record ParsedParagraph(
 public enum ParagraphRole
 {
     SectionHeading,
-    ListItem,
     Body,
     Unknown
 }

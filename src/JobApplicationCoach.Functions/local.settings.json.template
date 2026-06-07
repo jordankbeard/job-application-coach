@@ -1,0 +1,20 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
+
+    "AzureDocumentIntelligence__Endpoint": "https://<your-resource>.cognitiveservices.azure.com/",
+    "AzureDocumentIntelligence__ApiKey": "<your-key>",
+
+    "AzureAISearch__Endpoint": "https://<your-search>.search.windows.net",
+    "AzureAISearch__ApiKey": "<your-key>",
+    "AzureAISearch__CvIndexName": "<your-cv-index>",
+    "AzureAISearch__JdIndexName": "<your-jd-index>",
+
+    "AzureOpenAI__Endpoint": "https://<your-foundry>.openai.azure.com/",
+    "AzureOpenAI__ApiKey": "<your-key>",
+    "AzureOpenAI__ChatDeployment": "gpt-4o",
+    "AzureOpenAI__EmbeddingDeployment": "text-embedding-3-small"
+  }
+}

@@ -13,8 +13,8 @@ public sealed class ChunkingServiceTests
         var paragraphs = new[]
         {
             Para("Experience", ParagraphRole.SectionHeading, 0),
-            Para("Led a team of 5 engineers",   ParagraphRole.ListItem, 1),
-            Para("Delivered microservices MVP",  ParagraphRole.ListItem, 2)
+            Para("Led a team of 5 engineers",   ParagraphRole.Body, 1),
+            Para("Delivered microservices MVP",  ParagraphRole.Body, 2)
         };
 
         var chunks = _sut.Chunk(paragraphs, SessionId, DocumentType.Cv);
@@ -59,7 +59,7 @@ public sealed class ChunkingServiceTests
         var paragraphs = new[]
         {
             Para("Experience",             ParagraphRole.SectionHeading, 0),
-            Para("Led a team of 5 engineers", ParagraphRole.ListItem,   1)
+            Para("Led a team of 5 engineers", ParagraphRole.Body,   1)
         };
 
         var chunks = _sut.Chunk(paragraphs, SessionId, DocumentType.Cv);
@@ -73,8 +73,8 @@ public sealed class ChunkingServiceTests
         var paragraphs = new[]
         {
             Para("Experience",                  ParagraphRole.SectionHeading, 0),
-            Para("Led a team of 5 engineers",   ParagraphRole.ListItem,       1),
-            Para("Delivered microservices MVP", ParagraphRole.ListItem,       2)
+            Para("Led a team of 5 engineers",   ParagraphRole.Body,       1),
+            Para("Delivered microservices MVP", ParagraphRole.Body,       2)
         };
 
         var chunks = _sut.Chunk(paragraphs, SessionId, DocumentType.Cv);
@@ -88,7 +88,7 @@ public sealed class ChunkingServiceTests
         var paragraphs = new[]
         {
             Para("Experience",              ParagraphRole.SectionHeading, 0),
-            Para("Led a team of 5 engineers", ParagraphRole.ListItem,    1),
+            Para("Led a team of 5 engineers", ParagraphRole.Body,    1),
             Para("Skills",                  ParagraphRole.SectionHeading, 2),
             Para("C#, Azure",               ParagraphRole.Body,           3)
         };
@@ -105,9 +105,9 @@ public sealed class ChunkingServiceTests
         var paragraphs = new[]
         {
             Para("Experience",   ParagraphRole.SectionHeading, 0),
-            Para("First bullet", ParagraphRole.ListItem,       1),
-            Para("Second bullet",ParagraphRole.ListItem,       2),
-            Para("Third bullet", ParagraphRole.ListItem,       3)
+            Para("First bullet", ParagraphRole.Body,       1),
+            Para("Second bullet",ParagraphRole.Body,       2),
+            Para("Third bullet", ParagraphRole.Body,       3)
         };
 
         var chunks = _sut.Chunk(paragraphs, SessionId, DocumentType.Cv);
@@ -121,7 +121,7 @@ public sealed class ChunkingServiceTests
         var paragraphs = new[]
         {
             Para("Requirements",      ParagraphRole.SectionHeading, 0),
-            Para("5+ years .NET exp", ParagraphRole.ListItem,       1)
+            Para("5+ years .NET exp", ParagraphRole.Body,       1)
         };
 
         var chunks = _sut.Chunk(paragraphs, SessionId, DocumentType.JobDescription);
@@ -150,8 +150,8 @@ public sealed class ChunkingServiceTests
         var paragraphs = new[]
         {
             Para("Experience",   ParagraphRole.SectionHeading, 0),
-            Para("First bullet", ParagraphRole.ListItem,       1),
-            Para("Second bullet",ParagraphRole.ListItem,       2)
+            Para("First bullet", ParagraphRole.Body,       1),
+            Para("Second bullet",ParagraphRole.Body,       2)
         };
 
         var chunks = _sut.Chunk(paragraphs, SessionId, DocumentType.Cv);

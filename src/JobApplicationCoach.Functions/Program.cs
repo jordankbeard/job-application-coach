@@ -1,5 +1,6 @@
 using Azure.Monitor.OpenTelemetry.Exporter;
-using Microsoft.Azure.Functions.Worker;
+using JobApplicationCoach.Core.Ingest;
+using JobApplicationCoach.Infrastructure;
 using Microsoft.Azure.Functions.Worker.Builder;
 using Microsoft.Azure.Functions.Worker.OpenTelemetry;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,5 +17,10 @@ if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("APPLICATIONINSIGHT
         .UseFunctionsWorkerDefaults()
         .UseAzureMonitorExporter();
 }
+
+builder.Services.AddDocumentParsing(builder.Configuration);
+builder.Services.AddSemanticKernel(builder.Configuration);
+builder.Services.AddVectorStore(builder.Configuration);
+builder.Services.AddSingleton<ChunkingService>();
 
 builder.Build().Run();
