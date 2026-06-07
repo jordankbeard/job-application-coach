@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/JobApplicationCoach.Core/JobApplicationCoach.Core.csproj" />
+    <Project Path="src/JobApplicationCoach.Functions/JobApplicationCoach.Functions.csproj" />
+    <Project Path="src/JobApplicationCoach.Infrastructure/JobApplicationCoach.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/JobApplicationCoach.Core.Tests/JobApplicationCoach.Core.Tests.csproj" />
+    <Project Path="tests/JobApplicationCoach.Functions.Tests/JobApplicationCoach.Functions.Tests.csproj" />
+  </Folder>
+</Solution>

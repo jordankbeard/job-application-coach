@@ -7,6 +7,7 @@
 | [ADR-003](ADR-003-vector-store.md) | Use Azure AI Search as vector store | Accepted |
 | [ADR-004](ADR-004-pdf-parsing.md) | Use Azure Document Intelligence for PDF parsing | Accepted |
 | [ADR-005](ADR-005-chunking-strategy.md) | Hybrid chunking strategy (sentence-level + parent context) | Accepted |
+| [ADR-006](ADR-006-vertical-slice.md) | Vertical Slice Architecture for Core project | Accepted |
 
 ## Adding a new ADR
 
