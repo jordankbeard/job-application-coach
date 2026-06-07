@@ -21,14 +21,14 @@ jobs:
           dotnet-version: 8.x
 
       - name: Restore
-        run: dotnet restore JobApplicationCoach.sln
+        run: dotnet restore JobApplicationCoach.slnx
 
       - name: Build
-        run: dotnet build JobApplicationCoach.sln --no-restore --configuration Release
+        run: dotnet build JobApplicationCoach.slnx --no-restore --configuration Release
 
       - name: Test
         run: >
-          dotnet test JobApplicationCoach.sln
+          dotnet test JobApplicationCoach.slnx
           --no-build
           --configuration Release
           --logger trx
@@ -37,6 +37,7 @@ jobs:
       - name: Publish test results
         uses: dorny/test-reporter@v2
         if: always()
+        continue-on-error: true
         with:
           name: Test Results
           path: ./test-results/**/*.trx
