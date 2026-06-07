@@ -1,5 +1,6 @@
-using Azure;
 using Azure.AI.DocumentIntelligence;
+using Azure.Core;
+using Azure.Identity;
 using Azure.Search.Documents.Indexes;
 using JobApplicationCoach.Core.Ingest;
 using JobApplicationCoach.Infrastructure.DocumentParsing;
@@ -8,6 +9,7 @@ using JobApplicationCoach.Infrastructure.VectorStore;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using SKernel = Microsoft.SemanticKernel.Kernel;
 
 namespace JobApplicationCoach.Infrastructure;
@@ -18,15 +20,16 @@ public static class InfrastructureServiceExtensions
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        services.AddSingleton(_ =>
+        // TryAddSingleton is idempotent — if AddSemanticKernel or AddVectorStore was called
+        // first, the same DefaultAzureCredential instance is reused across all three clients.
+        services.TryAddSingleton<TokenCredential>(_ => new DefaultAzureCredential());
+
+        services.AddSingleton(sp =>
         {
             var endpoint = new Uri(configuration["AzureDocumentIntelligence__Endpoint"]
                 ?? throw new InvalidOperationException("AzureDocumentIntelligence__Endpoint is not configured."));
 
-            var key = new AzureKeyCredential(configuration["AzureDocumentIntelligence__ApiKey"]
-                ?? throw new InvalidOperationException("AzureDocumentIntelligence__ApiKey is not configured."));
-
-            return new DocumentIntelligenceClient(endpoint, key);
+            return new DocumentIntelligenceClient(endpoint, sp.GetRequiredService<TokenCredential>());
         });
 
         services.AddSingleton<IDocumentParser, AzureDocumentParser>();
@@ -38,15 +41,14 @@ public static class InfrastructureServiceExtensions
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        services.AddSingleton(_ =>
+        services.TryAddSingleton<TokenCredential>(_ => new DefaultAzureCredential());
+
+        services.AddSingleton(sp =>
         {
             var endpoint = new Uri(configuration["AzureAISearch__Endpoint"]
                 ?? throw new InvalidOperationException("AzureAISearch__Endpoint is not configured."));
 
-            var key = new AzureKeyCredential(configuration["AzureAISearch__ApiKey"]
-                ?? throw new InvalidOperationException("AzureAISearch__ApiKey is not configured."));
-
-            return new SearchIndexClient(endpoint, key);
+            return new SearchIndexClient(endpoint, sp.GetRequiredService<TokenCredential>());
         });
 
         services.Configure<AzureAISearchOptions>(options =>
@@ -66,7 +68,10 @@ public static class InfrastructureServiceExtensions
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        services.AddSingleton(_ => KernelFactory.Create(configuration));
+        services.TryAddSingleton<TokenCredential>(_ => new DefaultAzureCredential());
+
+        services.AddSingleton(sp =>
+            KernelFactory.Create(configuration, sp.GetRequiredService<TokenCredential>()));
 
         services.AddSingleton<IEmbeddingGenerator<string, Embedding<float>>>(sp =>
             sp.GetRequiredService<SKernel>()

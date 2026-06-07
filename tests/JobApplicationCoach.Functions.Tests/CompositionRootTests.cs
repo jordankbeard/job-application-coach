@@ -25,14 +25,14 @@ public sealed class CompositionRootTests
         var configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string?>
             {
+                // No API keys — all Azure services use Entra ID (DefaultAzureCredential).
+                // Clients don't connect at construction time so fake endpoints are sufficient
+                // for Level 1 DI composition tests.
                 ["AzureDocumentIntelligence__Endpoint"] = "https://fake.cognitiveservices.azure.com/",
-                ["AzureDocumentIntelligence__ApiKey"]   = "fake-key-32-chars-padded-here-xx",
                 ["AzureAISearch__Endpoint"]             = "https://fake.search.windows.net",
-                ["AzureAISearch__ApiKey"]               = "fake-key-32-chars-padded-here-xx",
                 ["AzureAISearch__CvIndexName"]          = "cv-chunks",
                 ["AzureAISearch__JdIndexName"]          = "jd-chunks",
                 ["AzureOpenAI__Endpoint"]               = "https://fake.openai.azure.com/",
-                ["AzureOpenAI__ApiKey"]                 = "fake-key-32-chars-padded-here-xx",
                 ["AzureOpenAI__ChatDeployment"]         = "gpt-4o",
                 ["AzureOpenAI__EmbeddingDeployment"]    = "text-embedding-3-small",
             })

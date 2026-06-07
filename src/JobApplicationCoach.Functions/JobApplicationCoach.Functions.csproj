@@ -6,6 +6,12 @@
     <OutputType>Exe</OutputType>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <!--
+      Prevents the Functions SDK _FunctionsCleanOutput target from stripping assemblies
+      it considers "host-provided". Without this, Azure.Core strips System.Memory.Data
+      from the output and the isolated worker fails to start at runtime.
+    -->
+    <_FunctionsSkipCleanOutput>true</_FunctionsSkipCleanOutput>
   </PropertyGroup>
 
   <ItemGroup>
