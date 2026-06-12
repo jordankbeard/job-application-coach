@@ -20,13 +20,13 @@ public sealed class PipelineOrchestrator
         var cvInput = new IngestActivityInput(
             SessionId: request.SessionId,
             DocumentType: "Cv",
-            Content: Convert.FromBase64String(request.CvContentBase64),
+            Content: request.CvContent,
             FileName: request.CvFileName);
 
         var jdInput = new IngestActivityInput(
             SessionId: request.SessionId,
             DocumentType: "JobDescription",
-            Content: Convert.FromBase64String(request.JdContentBase64),
+            Content: request.JdContent,
             FileName: request.JdFileName);
 
         await context.CallActivityAsync(nameof(IngestDocumentActivity), cvInput);

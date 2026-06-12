@@ -28,13 +28,19 @@ public sealed class CompositionRootTests
                 // No API keys — all Azure services use Entra ID (DefaultAzureCredential).
                 // Clients don't connect at construction time so fake endpoints are sufficient
                 // for Level 1 DI composition tests.
-                ["AzureDocumentIntelligence__Endpoint"] = "https://fake.cognitiveservices.azure.com/",
-                ["AzureAISearch__Endpoint"]             = "https://fake.search.windows.net",
-                ["AzureAISearch__CvIndexName"]          = "cv-chunks",
-                ["AzureAISearch__JdIndexName"]          = "jd-chunks",
-                ["AzureOpenAI__Endpoint"]               = "https://fake.openai.azure.com/",
-                ["AzureOpenAI__ChatDeployment"]         = "gpt-4o",
-                ["AzureOpenAI__EmbeddingDeployment"]    = "text-embedding-3-small",
+                //
+                // Keys use ":" (colon) as the hierarchy separator — the IConfiguration standard.
+                // In local.settings.json / Azure App Settings the same keys use "__" (double
+                // underscore) because ":" is not valid in environment variable names.
+                // The EnvironmentVariablesConfigurationProvider converts "__" → ":" on load,
+                // so the code must always use ":" when reading IConfiguration.
+                ["AzureDocumentIntelligence:Endpoint"] = "https://fake.cognitiveservices.azure.com/",
+                ["AzureAISearch:Endpoint"]             = "https://fake.search.windows.net",
+                ["AzureAISearch:CvIndexName"]          = "cv-chunks",
+                ["AzureAISearch:JdIndexName"]          = "jd-chunks",
+                ["AzureOpenAI:Endpoint"]               = "https://fake.openai.azure.com/",
+                ["AzureOpenAI:ChatDeployment"]         = "gpt-4o",
+                ["AzureOpenAI:EmbeddingDeployment"]    = "text-embedding-3-small",
             })
             .Build();
 

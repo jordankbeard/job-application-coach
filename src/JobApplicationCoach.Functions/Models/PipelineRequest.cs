@@ -2,7 +2,7 @@ namespace JobApplicationCoach.Functions.Models;
 
 public sealed record PipelineRequest(
     string SessionId,
-    string CvContentBase64,
+    byte[] CvContent,
     string CvFileName,
-    string JdContentBase64,
+    byte[] JdContent,
     string JdFileName);

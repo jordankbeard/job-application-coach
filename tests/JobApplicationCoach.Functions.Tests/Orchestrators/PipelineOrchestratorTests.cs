@@ -61,10 +61,10 @@ public sealed class PipelineOrchestratorTests
     }
 
     [Fact]
-    public async Task Run_DecodesBase64Content_ForCvActivity()
+    public async Task Run_PassesCvContent_ToIngestActivity()
     {
         var cvBytes = "cv content"u8.ToArray();
-        var request = BuildRequest(cvContentBase64: Convert.ToBase64String(cvBytes));
+        var request = BuildRequest(cvContent: cvBytes);
 
         await _sut.Run(_context, request);
 
@@ -77,12 +77,12 @@ public sealed class PipelineOrchestratorTests
 
     private static PipelineRequest BuildRequest(
         string sessionId = "session-001",
-        string? cvContentBase64 = null,
-        string? jdContentBase64 = null) =>
+        byte[]? cvContent = null,
+        byte[]? jdContent = null) =>
         new(
             SessionId: sessionId,
-            CvContentBase64: cvContentBase64 ?? Convert.ToBase64String("cv"u8.ToArray()),
+            CvContent: cvContent ?? "cv"u8.ToArray(),
             CvFileName: "cv.txt",
-            JdContentBase64: jdContentBase64 ?? Convert.ToBase64String("jd"u8.ToArray()),
+            JdContent: jdContent ?? "jd"u8.ToArray(),
             JdFileName: "jd.txt");
 }

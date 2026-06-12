@@ -30,4 +30,15 @@
     <ProjectReference Include="..\JobApplicationCoach.Infrastructure\JobApplicationCoach.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <!--
+      Copies local.settings.json to the output directory so Visual Studio's debugger
+      can find it (the Functions host runs from bin/Debug/net8.0, not the project root).
+      CopyToPublishDirectory:Never ensures it is never deployed to Azure.
+    -->
+    <None Update="local.settings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>      
+    </None>
+  </ItemGroup>
+
 </Project>

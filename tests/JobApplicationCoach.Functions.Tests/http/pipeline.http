@@ -1,0 +1,57 @@
+### Job Application Coach — Pipeline API
+### Open in Visual Studio 2022 (17.6+) or VS Code with REST Client extension
+
+@baseUrl = http://localhost:7252
+@sessionId = smoke-001
+
+# ---------------------------------------------------------------------------
+# 1. Submit CV + JD — starts the Durable orchestration
+#    Expected: 202 Accepted with statusQueryGetUri etc.
+#
+#    Inline content is used here to avoid VS's multipart file-reference
+#    limitations. For real PDF/DOCX files use curl (see bottom of file).
+# ---------------------------------------------------------------------------
+
+### Submit pipeline
+POST {{baseUrl}}/api/pipeline
+Content-Type: multipart/form-data; boundary=TestBoundary
+
+--TestBoundary
+Content-Disposition: form-data; name="sessionId"
+
+{{sessionId}}
+--TestBoundary
+Content-Disposition: form-data; name="cv"; filename="cv.txt"
+Content-Type: text/plain
+
+Jordan Smith - Senior Software Engineer
+Skills: C# .NET 8 ASP.NET Core Azure Functions Durable Functions
+Experience: Built document pipelines on Azure, led migrations to .NET 8
+Education: BSc Computer Science University of Bristol 2018
+--TestBoundary
+Content-Disposition: form-data; name="jd"; filename="jd.txt"
+Content-Type: text/plain
+
+Senior .NET Developer - Azure AI Platform
+Requirements: 5 years C# .NET experience, Azure Functions, Semantic Kernel
+Nice to have: Durable Functions, Azure AI Search, vector databases
+--TestBoundary--
+
+# ---------------------------------------------------------------------------
+# 2. Poll orchestration status
+#    Paste the instanceId from the 202 response into @instanceId below.
+#    runtimeStatus: Running -> Completed (or Failed)
+# ---------------------------------------------------------------------------
+@instanceId = PASTE_INSTANCE_ID_HERE
+
+### Check status
+GET {{baseUrl}}/runtime/webhooks/durabletask/instances/{{instanceId}}
+
+# ---------------------------------------------------------------------------
+# For real PDF/DOCX files use curl:
+#
+# curl.exe -X POST http://localhost:7252/api/pipeline `
+#   -F "sessionId=smoke-001" `
+#   -F "cv=@C:\path\to\cv.pdf" `
+#   -F "jd=@C:\path\to\jd.pdf"
+# ---------------------------------------------------------------------------
