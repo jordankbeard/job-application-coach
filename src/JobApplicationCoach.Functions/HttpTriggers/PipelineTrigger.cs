@@ -35,7 +35,10 @@ public sealed class PipelineTrigger(ILogger<PipelineTrigger> logger)
         try
         {
             var boundary = ExtractBoundary(contentTypeHeader);
-            var reader = new MultipartReader(boundary, req.Body);
+            var reader = new MultipartReader(boundary, req.Body)
+            {
+                BodyLengthLimit = 50 * 1024 * 1024, // 50 MB per section
+            };
 
             MultipartSection? section;
             while ((section = await reader.ReadNextSectionAsync(cancellationToken)) is not null)
