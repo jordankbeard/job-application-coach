@@ -20,7 +20,9 @@ public sealed class IngestDocumentActivity(
             "Ingesting {DocumentType} for session {SessionId}",
             input.DocumentType, input.SessionId);
 
-        var documentType = Enum.Parse<DocumentType>(input.DocumentType);
+        if (!Enum.TryParse<DocumentType>(input.DocumentType, out var documentType))
+            throw new InvalidOperationException(
+                $"Unknown DocumentType '{input.DocumentType}'. Expected one of: {string.Join(", ", Enum.GetNames<DocumentType>())}.");
 
         var ingestRequest = new IngestRequest(
             SessionId: input.SessionId,

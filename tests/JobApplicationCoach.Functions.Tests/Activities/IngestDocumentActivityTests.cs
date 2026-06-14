@@ -101,6 +101,13 @@ public sealed class IngestDocumentActivityTests
         await _parser.Received(1).ParseAsync(Arg.Any<IngestRequest>(), Arg.Any<CancellationToken>());
     }
 
+    [Fact]
+    public async Task Run_Throws_WhenDocumentTypeIsInvalid()
+    {
+        await Assert.ThrowsAsync<InvalidOperationException>(
+            () => _sut.Run(BuildInput("NotAType"), CancellationToken.None));
+    }
+
     private static IngestActivityInput BuildInput(
         string documentType,
         string sessionId = "session-001",
