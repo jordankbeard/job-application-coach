@@ -2,7 +2,7 @@ using System.Text;
 
 namespace JobApplicationCoach.Core.Ingest;
 
-public sealed class ChunkingService
+public sealed class ChunkingService : IChunkingService
 {
     private const int ParentContextTokenLimit = 100;
 

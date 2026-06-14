@@ -24,6 +24,6 @@ if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("APPLICATIONINSIGHT
 builder.Services.AddDocumentParsing(builder.Configuration);
 builder.Services.AddSemanticKernel(builder.Configuration);
 builder.Services.AddVectorStore(builder.Configuration);
-builder.Services.AddSingleton<ChunkingService>();
+builder.Services.AddSingleton<IChunkingService, ChunkingService>();
 
 builder.Build().Run();

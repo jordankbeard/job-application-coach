@@ -10,12 +10,17 @@ public sealed class IngestDocumentActivityTests
 {
     private readonly IDocumentParser _parser = Substitute.For<IDocumentParser>();
     private readonly IChunkStore _chunkStore = Substitute.For<IChunkStore>();
-    private readonly ChunkingService _chunkingService = new();
+    private readonly IChunkingService _chunkingService = Substitute.For<IChunkingService>();
     private readonly ILogger<IngestDocumentActivity> _logger = Substitute.For<ILogger<IngestDocumentActivity>>();
     private readonly IngestDocumentActivity _sut;
 
     public IngestDocumentActivityTests()
     {
+        // Default: return an empty list so tests that don't care about chunks don't NRE on chunks.Count
+        _chunkingService
+            .Chunk(Arg.Any<IReadOnlyList<ParsedParagraph>>(), Arg.Any<string>(), Arg.Any<DocumentType>())
+            .Returns([]);
+
         _sut = new IngestDocumentActivity(_parser, _chunkingService, _chunkStore, _logger);
     }
 
@@ -66,9 +71,13 @@ public sealed class IngestDocumentActivityTests
             new ParsedParagraph("Experience", ParagraphRole.SectionHeading, 0),
             new ParsedParagraph("Led a team of engineers", ParagraphRole.Body, 1)
         };
+        var expectedChunk = new DocumentChunk("id-1", "session-001", DocumentType.Cv, "Led a team of engineers", "Experience", "Experience", 0);
 
         _parser.ParseAsync(Arg.Any<IngestRequest>(), Arg.Any<CancellationToken>())
                .Returns(paragraphs);
+        _chunkingService
+            .Chunk(Arg.Any<IReadOnlyList<ParsedParagraph>>(), Arg.Any<string>(), Arg.Any<DocumentType>())
+            .Returns(new[] { expectedChunk });
 
         await _sut.Run(BuildInput("Cv"), CancellationToken.None);
 

@@ -49,7 +49,7 @@ public sealed class CompositionRootTests
             .AddDocumentParsing(configuration)
             .AddSemanticKernel(configuration)
             .AddVectorStore(configuration)
-            .AddSingleton<ChunkingService>()
+            .AddSingleton<IChunkingService, ChunkingService>()
             .BuildServiceProvider();
     }
 
@@ -68,10 +68,10 @@ public sealed class CompositionRootTests
     }
 
     [Fact]
-    public void ChunkingService_Resolves()
+    public void IChunkingService_Resolves_AsChunkingService()
     {
-        var service = _services.GetRequiredService<ChunkingService>();
-        Assert.NotNull(service);
+        var service = _services.GetRequiredService<IChunkingService>();
+        Assert.IsType<ChunkingService>(service);
     }
 
     [Fact]
@@ -87,7 +87,7 @@ public sealed class CompositionRootTests
         // IngestDocumentActivity is not registered in DI (Functions runtime handles that),
         // so we verify each constructor parameter resolves individually.
         Assert.NotNull(_services.GetRequiredService<IDocumentParser>());
-        Assert.NotNull(_services.GetRequiredService<ChunkingService>());
+        Assert.NotNull(_services.GetRequiredService<IChunkingService>());
         Assert.NotNull(_services.GetRequiredService<IChunkStore>());
         Assert.NotNull(_services.GetRequiredService<ILogger<Functions.Activities.IngestDocumentActivity>>());
     }

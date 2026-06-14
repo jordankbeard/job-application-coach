@@ -7,7 +7,7 @@ namespace JobApplicationCoach.Functions.Activities;
 
 public sealed class IngestDocumentActivity(
     IDocumentParser documentParser,
-    ChunkingService chunkingService,
+    IChunkingService chunkingService,
     IChunkStore chunkStore,
     ILogger<IngestDocumentActivity> logger)
 {

@@ -75,7 +75,7 @@ jobs:
       (github.event_name == 'workflow_dispatch' && github.event.inputs.command == 'up')
     environment: Dev
     env:
-      PULUMI_STACK: prod
+      PULUMI_STACK: dev
 
     steps:
       - uses: actions/checkout@v4

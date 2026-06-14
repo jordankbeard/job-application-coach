@@ -28,6 +28,12 @@ public sealed class AzureAISearchService : IChunkStore
     {
         if (chunks.Count == 0) return;
 
+        var distinctTypes = chunks.Select(c => c.DocumentType).Distinct().ToList();
+        if (distinctTypes.Count > 1)
+            throw new ArgumentException(
+                $"All chunks must share the same DocumentType. Got: {string.Join(", ", distinctTypes)}.",
+                nameof(chunks));
+
         var indexName = ResolveIndexName(chunks[0].DocumentType);
         var searchClient = _indexClient.GetSearchClient(indexName);
 
@@ -52,7 +58,13 @@ public sealed class AzureAISearchService : IChunkStore
 
         // MergeOrUpload is idempotent — re-ingesting the same session overwrites rather than duplicates
         var batch = IndexDocumentsBatch.MergeOrUpload(documents);
-        await searchClient.IndexDocumentsAsync(batch, cancellationToken: cancellationToken);
+        var result = await searchClient.IndexDocumentsAsync(batch, cancellationToken: cancellationToken);
+
+        var failed = result.Value.Results.Where(r => !r.Succeeded).ToList();
+        if (failed.Count > 0)
+            throw new InvalidOperationException(
+                $"{failed.Count} of {chunks.Count} chunks failed to index for {chunks[0].DocumentType}. " +
+                $"Failed chunk keys: {string.Join(", ", failed.Select(f => f.Key))}");
     }
 
     private string ResolveIndexName(DocumentType documentType) => documentType switch
