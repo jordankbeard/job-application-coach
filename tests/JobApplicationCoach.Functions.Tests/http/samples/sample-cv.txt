@@ -1,0 +1,35 @@
+Jordan Smith
+Senior Software Engineer
+jordan.smith@email.com | +44 7700 000000 | London, UK | github.com/jordansmith
+
+SUMMARY
+Experienced software engineer with 6 years building enterprise .NET applications and cloud-native
+solutions on Azure. Track record of delivering scalable microservices and leading small teams.
+
+EXPERIENCE
+
+Senior Software Engineer | Acme Corp | 2022 - Present
+- Built a document processing pipeline handling 50,000 PDFs/month using Azure Functions and Service Bus
+- Led migration of monolithic .NET Framework application to .NET 8 microservices, reducing deployment time by 70%
+- Implemented CI/CD pipelines using GitHub Actions, cutting release cycle from 2 weeks to daily deployments
+- Mentored 3 junior developers and ran weekly code review sessions
+
+Software Engineer | TechStart Ltd | 2020 - 2022
+- Developed RESTful APIs using ASP.NET Core consumed by 20,000 active users
+- Integrated third-party payment providers (Stripe, PayPal) handling £2M monthly transactions
+- Introduced unit and integration testing, raising code coverage from 20% to 75%
+
+Junior Developer | Webco | 2018 - 2020
+- Maintained and extended e-commerce platform built on ASP.NET WebForms
+- Migrated legacy SQL Server stored procedures to Entity Framework Core
+- Collaborated with design team to implement responsive UI features using React
+
+SKILLS
+Languages:  C#, TypeScript, Python, SQL
+Frameworks: .NET 8, ASP.NET Core, Entity Framework Core, React
+Azure:      Functions, Service Bus, Blob Storage, Cosmos DB, Key Vault, API Management
+Tools:      Git, GitHub Actions, Docker, Kubernetes
+Practices:  TDD, SOLID, Clean Architecture, Agile/Scrum
+
+EDUCATION
+BSc Computer Science | University of Bristol | 2018

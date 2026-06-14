@@ -1,4 +1,8 @@
 <Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="CLAUDE.md" />
+    <File Path="README.md" />
+  </Folder>
   <Folder Name="/src/">
     <Project Path="src/JobApplicationCoach.Core/JobApplicationCoach.Core.csproj" />
     <Project Path="src/JobApplicationCoach.Functions/JobApplicationCoach.Functions.csproj" />

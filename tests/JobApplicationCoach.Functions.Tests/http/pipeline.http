@@ -1,0 +1,15 @@
+### Job Application Coach — Pipeline API
+### Open in Visual Studio 2022 (17.6+) or VS Code with REST Client extension
+
+@baseUrl = http://localhost:7252
+@sessionId = smoke-001
+
+
+### Check status
+GET {{baseUrl}}/runtime/webhooks/durabletask/instances/{{instanceId}}
+
+# ---------------------------------------------------------------------------
+# For real PDF/DOCX files use curl:
+#
+curl -X POST http://localhost:7252/api/pipeline -F "sessionId=smoke-001" -F "cv=@C:\_git\JobApplicationCoach\tests\JobApplicationCoach.Functions.Tests\http\samples\sample-cv.txt;type=text/plain" -F "jd=@C:\_git\JobApplicationCoach\tests\JobApplicationCoach.Functions.Tests\http\samples\sample-jd.txt;type=text/plain"
+# ---------------------------------------------------------------------------

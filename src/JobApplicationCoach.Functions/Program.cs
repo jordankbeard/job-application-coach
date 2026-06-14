@@ -1,5 +1,7 @@
 using Azure.Monitor.OpenTelemetry.Exporter;
-using Microsoft.Azure.Functions.Worker;
+using JobApplicationCoach.Core.Ingest;
+using JobApplicationCoach.Infrastructure;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Azure.Functions.Worker.Builder;
 using Microsoft.Azure.Functions.Worker.OpenTelemetry;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,11 +12,18 @@ var builder = FunctionsApplication.CreateBuilder(args);
 
 builder.ConfigureFunctionsWebApplication();
 
+builder.Services.Configure<FormOptions>(o => o.MultipartBodyLengthLimit = 50 * 1024 * 1024);
+
 if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("APPLICATIONINSIGHTS_CONNECTION_STRING")))
 {
     builder.Services.AddOpenTelemetry()
         .UseFunctionsWorkerDefaults()
         .UseAzureMonitorExporter();
 }
+
+builder.Services.AddDocumentParsing(builder.Configuration);
+builder.Services.AddSemanticKernel(builder.Configuration);
+builder.Services.AddVectorStore(builder.Configuration);
+builder.Services.AddSingleton<IChunkingService, ChunkingService>();
 
 builder.Build().Run();

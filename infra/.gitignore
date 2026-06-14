@@ -1,0 +1,11 @@
+# Pulumi local state — only relevant when using the 'file://' backend instead of Pulumi Cloud
+.pulumi/
+
+# Per-developer stack overrides (e.g. Pulumi.jordan.yaml with a personal dev subscription)
+# Stack config is in Program.cs (C# switch on stack name) — no Pulumi.*.yaml files needed.
+# If a developer adds a personal stack override locally, keep it off the repo.
+Pulumi.*.yaml
+
+# .NET build artefacts
+bin/
+obj/

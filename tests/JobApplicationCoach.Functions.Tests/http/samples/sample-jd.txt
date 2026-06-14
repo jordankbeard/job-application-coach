@@ -1,0 +1,35 @@
+Senior .NET Developer — Azure AI Platform Team
+CloudTech Solutions | London, UK (Hybrid) | £80,000 - £100,000
+
+ABOUT THE ROLE
+We are looking for a Senior .NET Developer to join our growing Azure AI Platform team. You will
+design and build the next generation of AI-powered enterprise tools using .NET 8, Azure AI
+Services, and Semantic Kernel.
+
+RESPONSIBILITIES
+- Design and implement cloud-native services using Azure Functions, Durable Functions, and Service Bus
+- Integrate Azure AI services including Azure OpenAI, Document Intelligence, and AI Search
+- Build and maintain CI/CD pipelines using GitHub Actions
+- Collaborate with product and data science teams to translate requirements into scalable architecture
+- Champion clean code practices, code reviews, and TDD across the team
+- Mentor junior and mid-level developers
+
+REQUIREMENTS
+- 5+ years of professional .NET development experience (C#, .NET 6+)
+- Strong understanding of Azure cloud services and PaaS offerings
+- Experience with Semantic Kernel or other LLM orchestration frameworks
+- Hands-on experience with Azure AI services (OpenAI, Cognitive Services, AI Search)
+- Proven ability to design RESTful APIs and event-driven architectures
+- Solid understanding of SOLID principles and Vertical Slice Architecture
+- CI/CD experience with GitHub Actions or Azure DevOps
+
+NICE TO HAVE
+- Experience with Azure Durable Functions
+- Familiarity with vector databases (AI Search, Pinecone, Qdrant)
+- Terraform or Bicep for infrastructure as code
+
+BENEFITS
+- 25 days annual leave + bank holidays
+- Private healthcare
+- £2,000 annual learning budget
+- Flexible remote working
