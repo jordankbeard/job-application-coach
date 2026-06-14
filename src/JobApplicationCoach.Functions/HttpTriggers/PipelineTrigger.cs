@@ -16,6 +16,9 @@ public sealed class PipelineTrigger(ILogger<PipelineTrigger> logger)
         [DurableClient] DurableTaskClient durableClient,
         CancellationToken cancellationToken)
     {
+        if (!req.HasFormContentType)
+            return new BadRequestObjectResult("Content-Type must be multipart/form-data.");
+
         var form = await req.ReadFormAsync(cancellationToken);
 
         var sessionId = form["sessionId"].FirstOrDefault();

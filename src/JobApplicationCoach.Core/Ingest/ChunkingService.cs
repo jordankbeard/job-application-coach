@@ -31,7 +31,7 @@ public sealed class ChunkingService
             var parentContext = BuildParentContext(currentHeading, currentSectionParagraphs);
 
             chunks.Add(new DocumentChunk(
-                ChunkId: $"{sessionId}:{documentType}:{sequenceIndex}",
+                ChunkId: $"{sessionId}_{documentType}_{sequenceIndex}",
                 SessionId: sessionId,
                 DocumentType: documentType,
                 Content: paragraph.Content,
