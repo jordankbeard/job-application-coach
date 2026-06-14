@@ -1,0 +1,124 @@
+name: Infrastructure
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'infra/**'
+      - '.github/workflows/infra.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'infra/**'
+      - '.github/workflows/infra.yml'
+  workflow_dispatch:
+    inputs:
+      command:
+        description: 'Pulumi command'
+        required: true
+        default: preview
+        type: choice
+        options:
+          - preview
+          - up
+
+# Required for OIDC. When a job declares 'environment: Dev', the GitHub token
+# subject becomes repo:<owner>/<repo>:environment:Dev — one federated credential
+# covers all jobs regardless of whether they're triggered by a PR or a push to main.
+permissions:
+  id-token: write
+  contents: read
+  pull-requests: write   # allows Pulumi to post preview output as a PR comment
+
+env:
+  DOTNET_VERSION: '8.0.x'
+  PULUMI_STACK: prod
+
+jobs:
+  # ── Preview (PR) ─────────────────────────────────────────────────────────────
+  preview:
+    name: Pulumi Preview
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    environment: Dev
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET ${{ env.DOTNET_VERSION }}
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Pulumi preview
+        uses: pulumi/actions@v5
+        with:
+          command: preview
+          stack-name: ${{ env.PULUMI_STACK }}
+          work-dir: infra
+          comment-on-pr: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+          ARM_USE_OIDC:        "true"
+          ARM_CLIENT_ID:       ${{ vars.AZURE_CLIENT_ID }}
+          ARM_TENANT_ID:       ${{ vars.AZURE_TENANT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+
+  # ── Deploy (main) ─────────────────────────────────────────────────────────────
+  deploy:
+    name: Pulumi Up
+    runs-on: ubuntu-latest
+    if: >
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.command == 'up')
+    environment: Dev
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET ${{ env.DOTNET_VERSION }}
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Pulumi up
+        uses: pulumi/actions@v5
+        with:
+          command: up
+          stack-name: ${{ env.PULUMI_STACK }}
+          work-dir: infra
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+          ARM_USE_OIDC:        "true"
+          ARM_CLIENT_ID:       ${{ vars.AZURE_CLIENT_ID }}
+          ARM_TENANT_ID:       ${{ vars.AZURE_TENANT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+
+  # ── Manual preview (workflow_dispatch) ────────────────────────────────────────
+  manual-preview:
+    name: Pulumi Preview (manual)
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.command == 'preview'
+    environment: Dev
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET ${{ env.DOTNET_VERSION }}
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Pulumi preview
+        uses: pulumi/actions@v5
+        with:
+          command: preview
+          stack-name: ${{ env.PULUMI_STACK }}
+          work-dir: infra
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+          ARM_USE_OIDC:        "true"
+          ARM_CLIENT_ID:       ${{ vars.AZURE_CLIENT_ID }}
+          ARM_TENANT_ID:       ${{ vars.AZURE_TENANT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
