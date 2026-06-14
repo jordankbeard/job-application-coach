@@ -160,6 +160,21 @@ public sealed class ChunkingServiceTests
         Assert.Equal(ids.Count, ids.Distinct().Count());
     }
 
+    [Fact]
+    public void Chunk_ChunkIdsAreDeterministic_SameInputProducesSameIds()
+    {
+        var paragraphs = new[]
+        {
+            Para("Experience",   ParagraphRole.SectionHeading, 0),
+            Para("First bullet", ParagraphRole.Body,           1),
+        };
+
+        var first  = _sut.Chunk(paragraphs, SessionId, DocumentType.Cv);
+        var second = _sut.Chunk(paragraphs, SessionId, DocumentType.Cv);
+
+        Assert.Equal(first[0].ChunkId, second[0].ChunkId);
+    }
+
     private static ParsedParagraph Para(string content, ParagraphRole role, int index)
         => new(content, role, index);
 }
