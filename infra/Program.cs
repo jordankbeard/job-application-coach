@@ -88,7 +88,7 @@ return await Deployment.RunAsync(async () =>
         Location          = cfg.Location,
         Kind              = "FunctionApp",
         Sku               = new SkuDescriptionArgs { Name = "Y1", Tier = "Dynamic" },
-        Reserved          = true,  // required for Linux
+        Reserved          = true,
     });
 
     var functionApp = new WebApp("func", new WebAppArgs
@@ -101,20 +101,20 @@ return await Deployment.RunAsync(async () =>
         Identity          = new ManagedServiceIdentityArgs { Type = ManagedServiceIdentityType.SystemAssigned },
         SiteConfig        = new SiteConfigArgs
         {
-            LinuxFxVersion = "DOTNET-ISOLATED|8.0",
+            LinuxFxVersion = "DOTNET-ISOLATED|10.0",
             AppSettings    = new[]
             {
-                new NameValuePairArgs { Name = "AzureWebJobsStorage",                          Value = storageConnectionString },
-                new NameValuePairArgs { Name = "FUNCTIONS_EXTENSION_VERSION",                   Value = "~4" },
-                new NameValuePairArgs { Name = "FUNCTIONS_WORKER_RUNTIME",                     Value = "dotnet-isolated" },
-                new NameValuePairArgs { Name = "APPLICATIONINSIGHTS_CONNECTION_STRING",         Value = appInsights.ConnectionString },
-                new NameValuePairArgs { Name = "AzureDocumentIntelligence__Endpoint",  Value = cfg.DocIntelEndpoint },
-                new NameValuePairArgs { Name = "AzureAISearch__Endpoint",              Value = cfg.SearchEndpoint },
-                new NameValuePairArgs { Name = "AzureAISearch__CvIndexName",           Value = "cv-chunks" },
-                new NameValuePairArgs { Name = "AzureAISearch__JdIndexName",           Value = "jd-chunks" },
-                new NameValuePairArgs { Name = "AzureOpenAI__Endpoint",                Value = cfg.OpenAiEndpoint },
-                new NameValuePairArgs { Name = "AzureOpenAI__ChatDeployment",          Value = cfg.ChatDeployment },
-                new NameValuePairArgs { Name = "AzureOpenAI__EmbeddingDeployment",     Value = cfg.EmbeddingDeployment },
+                new NameValuePairArgs { Name = "AzureWebJobsStorage",                   Value = storageConnectionString },
+                new NameValuePairArgs { Name = "FUNCTIONS_EXTENSION_VERSION",            Value = "~4" },
+                new NameValuePairArgs { Name = "FUNCTIONS_WORKER_RUNTIME",              Value = "dotnet-isolated" },
+                new NameValuePairArgs { Name = "APPLICATIONINSIGHTS_CONNECTION_STRING",  Value = appInsights.ConnectionString },
+                new NameValuePairArgs { Name = "AzureDocumentIntelligence__Endpoint",   Value = cfg.DocIntelEndpoint },
+                new NameValuePairArgs { Name = "AzureAISearch__Endpoint",               Value = cfg.SearchEndpoint },
+                new NameValuePairArgs { Name = "AzureAISearch__CvIndexName",            Value = "cv-chunks" },
+                new NameValuePairArgs { Name = "AzureAISearch__JdIndexName",            Value = "jd-chunks" },
+                new NameValuePairArgs { Name = "AzureOpenAI__Endpoint",                 Value = cfg.OpenAiEndpoint },
+                new NameValuePairArgs { Name = "AzureOpenAI__ChatDeployment",           Value = cfg.ChatDeployment },
+                new NameValuePairArgs { Name = "AzureOpenAI__EmbeddingDeployment",      Value = cfg.EmbeddingDeployment },
             },
         },
     });
