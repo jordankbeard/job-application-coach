@@ -75,6 +75,22 @@ public sealed class PipelineOrchestratorTests
                 i.Content.SequenceEqual(cvBytes)));
     }
 
+    [Fact]
+    public async Task Run_IngestsCv_BeforeJobDescription()
+    {
+        await _sut.Run(_context, BuildRequest());
+
+        Received.InOrder(() =>
+        {
+            _context.CallActivityAsync(
+                nameof(IngestDocumentActivity),
+                Arg.Is<IngestActivityInput>(i => i.DocumentType == "Cv"));
+            _context.CallActivityAsync(
+                nameof(IngestDocumentActivity),
+                Arg.Is<IngestActivityInput>(i => i.DocumentType == "JobDescription"));
+        });
+    }
+
     private static PipelineRequest BuildRequest(
         string sessionId = "session-001",
         byte[]? cvContent = null,

@@ -130,6 +130,28 @@ public sealed class ChunkingServiceTests
     }
 
     [Fact]
+    public void Chunk_ParentContext_IsTruncated_WhenPrecedingContentExceedsTokenLimit()
+    {
+        // Two 200-char paragraphs push accumulated context past the 100-token (400-char) limit.
+        // The third preceding paragraph must not appear in the next chunk's parent context.
+        var longParagraph = new string('a', 200);
+
+        var paragraphs = new[]
+        {
+            Para("Experience",   ParagraphRole.SectionHeading, 0),
+            Para(longParagraph,  ParagraphRole.Body, 1),
+            Para(longParagraph,  ParagraphRole.Body, 2),
+            Para("overflow",     ParagraphRole.Body, 3),
+            Para("target",       ParagraphRole.Body, 4),
+        };
+
+        var chunks = _sut.Chunk(paragraphs, SessionId, DocumentType.Cv);
+
+        var target = chunks.Single(c => c.Content == "target");
+        Assert.DoesNotContain("overflow", target.ParentContext);
+    }
+
+    [Fact]
     public void Chunk_WithNoHeadings_ProducesChunksWithEmptySectionHeading()
     {
         var paragraphs = new[]
