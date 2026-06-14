@@ -1,5 +1,8 @@
 using Pulumi;
 using Pulumi.AzureNative.Authorization;
+using Pulumi.AzureNative.OperationalInsights;
+using AI       = Pulumi.AzureNative.Insights;
+using OIInputs = Pulumi.AzureNative.OperationalInsights.Inputs;
 using Pulumi.AzureNative.Storage;
 using Pulumi.AzureNative.Storage.Inputs;
 using Pulumi.AzureNative.Web;
@@ -62,6 +65,23 @@ return await Deployment.RunAsync(async () =>
     var storageConnectionString = Output.Format(
         $"DefaultEndpointsProtocol=https;AccountName={storage.Name};AccountKey={primaryKey};EndpointSuffix=core.windows.net");
 
+    var logAnalytics = new Workspace("logs", new WorkspaceArgs
+    {
+        ResourceGroupName = cfg.ResourceGroupName,
+        Location          = cfg.Location,
+        Sku               = new OIInputs.WorkspaceSkuArgs { Name = WorkspaceSkuNameEnum.PerGB2018 },
+        RetentionInDays   = 30,
+    });
+
+    var appInsights = new AI.Component("appinsights", new AI.ComponentArgs
+    {
+        ResourceGroupName   = cfg.ResourceGroupName,
+        Location            = cfg.Location,
+        ApplicationType     = AI.ApplicationType.Web,
+        Kind                = "web",
+        WorkspaceResourceId = logAnalytics.Id,
+    });
+
     var plan = new AppServicePlan("plan", new AppServicePlanArgs
     {
         ResourceGroupName = cfg.ResourceGroupName,
@@ -84,9 +104,10 @@ return await Deployment.RunAsync(async () =>
             LinuxFxVersion = "DOTNET-ISOLATED|8.0",
             AppSettings    = new[]
             {
-                new NameValuePairArgs { Name = "AzureWebJobsStorage",                  Value = storageConnectionString },
-                new NameValuePairArgs { Name = "FUNCTIONS_EXTENSION_VERSION",           Value = "~4" },
-                new NameValuePairArgs { Name = "FUNCTIONS_WORKER_RUNTIME",             Value = "dotnet-isolated" },
+                new NameValuePairArgs { Name = "AzureWebJobsStorage",                          Value = storageConnectionString },
+                new NameValuePairArgs { Name = "FUNCTIONS_EXTENSION_VERSION",                   Value = "~4" },
+                new NameValuePairArgs { Name = "FUNCTIONS_WORKER_RUNTIME",                     Value = "dotnet-isolated" },
+                new NameValuePairArgs { Name = "APPLICATIONINSIGHTS_CONNECTION_STRING",         Value = appInsights.ConnectionString },
                 new NameValuePairArgs { Name = "AzureDocumentIntelligence__Endpoint",  Value = cfg.DocIntelEndpoint },
                 new NameValuePairArgs { Name = "AzureAISearch__Endpoint",              Value = cfg.SearchEndpoint },
                 new NameValuePairArgs { Name = "AzureAISearch__CvIndexName",           Value = "cv-chunks" },
@@ -120,6 +141,7 @@ return await Deployment.RunAsync(async () =>
         ["functionAppName"]     = functionApp.Name,
         ["functionAppUrl"]      = functionApp.DefaultHostName.Apply(h => $"https://{h}"),
         ["functionAppIdentity"] = principalId,
+        ["appInsightsName"]     = appInsights.Name,
     };
 });
 
