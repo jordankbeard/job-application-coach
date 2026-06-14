@@ -1,7 +1,7 @@
 using Azure.Monitor.OpenTelemetry.Exporter;
 using JobApplicationCoach.Core.Ingest;
 using JobApplicationCoach.Infrastructure;
-using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Azure.Functions.Worker.Builder;
 using Microsoft.Azure.Functions.Worker.OpenTelemetry;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,13 +12,7 @@ var builder = FunctionsApplication.CreateBuilder(args);
 
 builder.ConfigureFunctionsWebApplication();
 
-// Workaround: DurableTaskClientExtensions.CreateCheckStatusResponse serialises the
-// management-URL payload using Azure.Core's JsonObjectSerializer, which writes to the
-// response stream synchronously. Kestrel disallows synchronous IO by default when the
-// ASP.NET Core integration is in use. This option re-enables it so the Durable library
-// can complete the write without throwing InvalidOperationException.
-// Tracked upstream: https://github.com/Azure/azure-functions-durable-extension/issues
-builder.Services.Configure<KestrelServerOptions>(o => o.AllowSynchronousIO = true);
+builder.Services.Configure<FormOptions>(o => o.MultipartBodyLengthLimit = 50 * 1024 * 1024);
 
 if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("APPLICATIONINSIGHTS_CONNECTION_STRING")))
 {
