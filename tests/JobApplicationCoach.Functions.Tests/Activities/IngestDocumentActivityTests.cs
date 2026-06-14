@@ -78,7 +78,7 @@ public sealed class IngestDocumentActivityTests
     }
 
     [Fact]
-    public async Task Run_DoesNotCallStore_WhenParserReturnsNoParagraphs()
+    public async Task Run_StoresEmptyList_WhenParserReturnsNoParagraphs()
     {
         _parser.ParseAsync(Arg.Any<IngestRequest>(), Arg.Any<CancellationToken>())
                .Returns([]);
